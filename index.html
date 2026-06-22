@@ -1,0 +1,513 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=MedievalSharp&family=Cinzel:wght@400;600&family=IM+Fell+English:ital@0;1&display=swap');
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{
+  --black:#0a0a0a;
+  --dark:#111111;
+  --card-bg:#161410;
+  --parchment:#D4C9A8;
+  --parchment-dim:#9A8E72;
+  --rust:#8B3A2A;
+  --rust-light:#B54A36;
+  --gold:#C9A84C;
+  --border-col:rgba(212,201,168,0.2);
+  --border-bright:rgba(212,201,168,0.5);
+}
+html,body{background:#0a0a0a;min-height:100vh}
+body{font-family:'IM Fell English',Georgia,serif;color:var(--parchment);font-size:14px}
+.screen{padding:12px;min-height:100vh;background:var(--black)}
+
+/* Typography */
+.title-font{font-family:'Cinzel',serif}
+h1{font-family:'Cinzel',serif;font-size:15px;font-weight:600;color:var(--parchment);letter-spacing:0.05em}
+h2{font-family:'Cinzel',serif;font-size:13px;font-weight:600;color:var(--parchment);letter-spacing:0.04em;margin-bottom:8px}
+p{color:var(--parchment-dim);font-size:12px;line-height:1.5}
+
+/* Buttons */
+.btn{display:flex;align-items:center;justify-content:center;gap:6px;padding:11px 16px;border-radius:4px;border:1px solid var(--border-bright);background:transparent;color:var(--parchment);font-family:'Cinzel',serif;font-size:12px;font-weight:600;letter-spacing:0.05em;cursor:pointer;width:100%;margin-top:8px;transition:all 0.15s;text-transform:uppercase}
+.btn:active{transform:scale(0.97)}
+.btn:hover{background:rgba(212,201,168,0.06)}
+.btn-primary{border-color:var(--gold);color:var(--gold);background:rgba(201,168,76,0.08)}
+.btn-primary:hover{background:rgba(201,168,76,0.15)}
+.btn-danger{border-color:var(--rust-light);color:var(--rust-light);background:rgba(139,58,42,0.12)}
+.btn-danger:hover{background:rgba(139,58,42,0.22)}
+.btn-success{border-color:#6B9A3A;color:#8BBB52;background:rgba(107,154,58,0.1)}
+.btn-success:hover{background:rgba(107,154,58,0.2)}
+.btn-sm{padding:7px 12px;font-size:11px;margin-top:4px}
+
+/* Cards */
+.card-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:8px 0}
+.card{background:var(--card-bg);border:1px solid var(--border-col);border-radius:4px;padding:6px;cursor:pointer;min-height:96px;display:flex;flex-direction:column;position:relative;transition:border-color 0.15s,background 0.15s}
+.card:hover{border-color:var(--border-bright)}
+.card.selected{border-color:var(--gold);background:rgba(201,168,76,0.08)}
+.card.active-card{border-color:#6B9A3A;background:rgba(107,154,58,0.08);border-width:1.5px}
+.card.locked{cursor:default}
+.card-name{font-family:'Cinzel',serif;font-size:9px;font-weight:600;line-height:1.3;color:var(--parchment);letter-spacing:0.03em}
+.card-art{width:100%;height:46px;border-radius:3px;margin:4px 0;background:#1a1612;border:1px solid var(--border-col);display:flex;align-items:center;justify-content:center;font-size:8px;color:rgba(212,201,168,0.3);overflow:hidden}
+.card-art img{width:100%;height:100%;object-fit:cover;border-radius:2px}
+.card-text{font-size:8px;color:var(--parchment-dim);line-height:1.3;flex:1;font-style:italic}
+.card-badge{position:absolute;top:3px;right:3px;font-size:7px;padding:1px 4px;border-radius:2px;font-family:'Cinzel',serif;font-weight:600}
+.badge-active{background:rgba(107,154,58,0.2);color:#8BBB52;border:1px solid rgba(107,154,58,0.4)}
+
+/* Score bar */
+.score-bar{background:var(--card-bg);border:1px solid var(--border-col);border-radius:4px;padding:10px 12px;margin-bottom:10px;display:flex;gap:8px}
+.score-item{text-align:center;flex:1;border-right:1px solid var(--border-col)}
+.score-item:last-child{border-right:none}
+.score-label{font-family:'Cinzel',serif;font-size:8px;color:var(--parchment-dim);margin-bottom:3px;text-transform:uppercase;letter-spacing:0.06em}
+.score-val{font-size:20px;font-weight:400;color:var(--parchment)}
+.score-val.primary{color:var(--gold)}
+.score-val.secondary{color:#8BBB52}
+
+/* Turn dots */
+.turn-indicator{display:flex;gap:8px;margin-bottom:8px;align-items:center}
+.turn-dot{width:28px;height:4px;border-radius:2px;background:rgba(212,201,168,0.15)}
+.turn-dot.done{background:var(--rust)}
+.turn-dot.current{background:var(--gold)}
+.turn-label{font-family:'Cinzel',serif;font-size:10px;color:var(--parchment-dim);margin-left:auto}
+
+/* Modal */
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,0.8);display:flex;align-items:center;justify-content:center;z-index:100;padding:16px}
+.modal{background:#111;border:1px solid var(--border-bright);border-radius:6px;padding:20px;width:100%;max-width:340px}
+.modal h3{font-family:'Cinzel',serif;font-size:14px;font-weight:600;color:var(--parchment);margin-bottom:8px;letter-spacing:0.04em}
+.modal p{font-size:12px;color:var(--parchment-dim);margin-bottom:16px;line-height:1.6;font-style:italic}
+
+/* Inputs */
+.input-row{margin-bottom:12px}
+.input-row label{font-family:'Cinzel',serif;font-size:10px;color:var(--parchment-dim);display:block;margin-bottom:5px;text-transform:uppercase;letter-spacing:0.05em}
+.input-row input{width:100%;padding:9px 10px;border:1px solid var(--border-bright);border-radius:4px;font-size:16px;background:#0d0d0d;color:var(--parchment);font-family:'IM Fell English',serif}
+.input-row input:focus{outline:none;border-color:var(--gold)}
+
+/* Sections */
+.section-label{font-family:'Cinzel',serif;font-size:9px;font-weight:600;color:var(--parchment-dim);text-transform:uppercase;letter-spacing:0.08em;margin:12px 0 6px}
+.hand-section{background:#0d0d0b;border:1px solid var(--border-col);border-radius:4px;padding:8px;margin:8px 0}
+.deck-count{font-family:'Cinzel',serif;font-size:9px;color:var(--parchment-dim)}
+.divider{border:none;border-top:1px solid var(--border-col);margin:10px 0}
+.pill{display:inline-flex;align-items:center;padding:3px 8px;border-radius:20px;font-family:'Cinzel',serif;font-size:10px;font-weight:600;letter-spacing:0.04em}
+.pill-gold{background:rgba(201,168,76,0.12);color:var(--gold);border:1px solid rgba(201,168,76,0.3)}
+.pill-green{background:rgba(107,154,58,0.12);color:#8BBB52;border:1px solid rgba(107,154,58,0.3)}
+
+/* Ornament line */
+.ornament{text-align:center;color:var(--rust);font-size:16px;letter-spacing:8px;margin:8px 0;opacity:0.6}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+<script>
+const {useState,useEffect}=React;
+const CORRECT_PIN='27091990';
+
+const DEFAULT_POOL=[
+  {id:1,name:'Iron Shield',text:'Defensive formation. Reduce incoming damage.',art:''},
+  {id:2,name:'Swift Advance',text:'Move up to 6" and still act.',art:''},
+  {id:3,name:'Suppressing Fire',text:'Pin an enemy unit in place.',art:''},
+  {id:4,name:'Artillery Strike',text:'Devastating ranged attack on target area.',art:''},
+  {id:5,name:'Field Medic',text:'Restore 1 casualty to a friendly unit.',art:''},
+  {id:6,name:'Flanking Maneuver',text:'Attack from an unexpected angle.',art:''},
+  {id:7,name:'Fortify Position',text:'Dig in and gain cover save.',art:''},
+  {id:8,name:'Signal Corps',text:'Coordinate two units this turn.',art:''},
+  {id:9,name:'Ambush Protocol',text:'Deploy a unit from reserve.',art:''},
+  {id:10,name:'Counter-Attack',text:'React to enemy advance with your own.',art:''},
+  {id:11,name:'Recon Report',text:'Scout enemy deployment zone.',art:''},
+  {id:12,name:'Supply Drop',text:'Resupply ammunition and equipment.',art:''},
+  {id:13,name:'Air Support',text:'Call in a strafing run on a target.',art:''},
+  {id:14,name:'Smoke Screen',text:'Obscure movement of one unit.',art:''},
+  {id:15,name:'Hold the Line',text:'Unit may not retreat but gains +1 save.',art:''},
+  {id:16,name:'Rapid Deployment',text:'Redeploy a unit up to 12".',art:''},
+  {id:17,name:'Combat Engineer',text:'Remove an obstacle or terrain feature.',art:''},
+  {id:18,name:'Mortar Barrage',text:'Indirect fire on a target zone.',art:''},
+  {id:19,name:'Intelligence Briefing',text:'Look at enemy\'s top 3 cards.',art:''},
+  {id:20,name:'Tank Commander',text:'Grant a vehicle unit +1 attack.',art:''},
+  {id:21,name:'Pincer Movement',text:'Coordinate a two-flank assault.',art:''},
+  {id:22,name:'Veteran Instincts',text:'Re-roll one failed save this turn.',art:''},
+  {id:23,name:'Scorched Earth',text:'Destroy terrain to deny its use.',art:''},
+  {id:24,name:'Breakthrough',text:'Remove all movement penalties for one unit.',art:''},
+  {id:25,name:'Heavy Weapons Team',text:'Deploy a long-range support unit.',art:''},
+  {id:26,name:'Forward Observer',text:'Grant +1 to hit for ranged attacks.',art:''},
+  {id:27,name:'Disciplined Retreat',text:'Fall back without triggering reactions.',art:''},
+  {id:28,name:'Rally the Troops',text:'Remove all shaken tokens from a unit.',art:''},
+  {id:29,name:'Siege Equipment',text:'Breach fortifications or barricades.',art:''},
+  {id:30,name:'Last Stand',text:'A unit at 1 model fights with full stats.',art:''},
+];
+
+const LOGO_URL='/mnt/user-data/uploads/LOGO_-_STREET_2K.png';
+
+function shuffle(arr){const a=[...arr];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a;}
+
+function CardDisplay({card,selected,onClick,locked,showActive}){
+  return React.createElement('div',{
+    className:`card${selected?' selected':''}${showActive?' active-card':''}${locked?' locked':''}`,
+    onClick:locked?null:onClick
+  },
+    showActive&&React.createElement('div',{className:'card-badge badge-active'},'Active'),
+    React.createElement('div',{className:'card-name'},card.name),
+    React.createElement('div',{className:'card-art'},
+      card.art?React.createElement('img',{src:card.art,alt:card.name}):React.createElement('span',null,'[art]')
+    ),
+    React.createElement('div',{className:'card-text'},card.text)
+  );
+}
+
+function Modal({children}){
+  return React.createElement('div',{className:'modal-bg'},
+    React.createElement('div',{className:'modal'},children)
+  );
+}
+
+function ScoreBar({primary,secondary,turn}){
+  return React.createElement('div',{className:'score-bar'},
+    React.createElement('div',{className:'score-item'},
+      React.createElement('div',{className:'score-label'},'Primary'),
+      React.createElement('div',{className:'score-val primary'},primary)
+    ),
+    React.createElement('div',{className:'score-item'},
+      React.createElement('div',{className:'score-label'},'Secondary'),
+      React.createElement('div',{className:'score-val secondary'},secondary)
+    ),
+    React.createElement('div',{className:'score-item'},
+      React.createElement('div',{className:'score-label'},'Total'),
+      React.createElement('div',{className:'score-val'},primary+secondary)
+    ),
+    React.createElement('div',{className:'score-item'},
+      React.createElement('div',{className:'score-label'},'Turn'),
+      React.createElement('div',{className:'score-val'},`${turn}/4`)
+    )
+  );
+}
+
+function TurnDots({turn}){
+  return React.createElement('div',{className:'turn-indicator'},
+    [1,2,3,4].map(t=>React.createElement('div',{key:t,className:`turn-dot${t<turn?' done':t===turn?' current':''}`})),
+    React.createElement('span',{className:'turn-label'},`Turn ${turn} of 4`)
+  );
+}
+
+// PIN GATE
+function PinGate({onSuccess}){
+  const [pin,setPin]=useState('');
+  const [err,setErr]=useState(false);
+  function check(){
+    if(pin===CORRECT_PIN){onSuccess();}
+    else{setErr(true);setPin('');}
+  }
+  return React.createElement('div',{className:'screen',style:{display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',minHeight:'60vh',gap:'12px',padding:'32px'}},
+    React.createElement('div',{style:{fontSize:'28px',marginBottom:'4px',color:'var(--rust)',letterSpacing:'4px'}},'⚔'),
+    React.createElement('h2',{style:{textAlign:'center'}},'Warlord Access'),
+    React.createElement('p',{style:{textAlign:'center',marginBottom:'16px'}},'Enter your PIN to edit the card pool.'),
+    React.createElement('input',{
+      type:'password',inputMode:'numeric',
+      value:pin,onChange:e=>setPin(e.target.value),
+      onKeyDown:e=>e.key==='Enter'&&check(),
+      placeholder:'••••••••',
+      style:{width:'180px',padding:'10px',textAlign:'center',fontSize:'22px',background:'#0d0d0d',border:'1px solid var(--border-bright)',borderRadius:'4px',color:'var(--parchment)',letterSpacing:'6px'}
+    }),
+    err&&React.createElement('p',{style:{color:'var(--rust-light)',fontStyle:'italic',fontSize:'12px'}},'Incorrect PIN. Access denied.'),
+    React.createElement('button',{className:'btn btn-primary',style:{width:'180px'},onClick:check},'Enter')
+  );
+}
+
+// CARD EDITOR
+function CardEditor({pool,onSave,onBack}){
+  const [cards,setCards]=useState(pool);
+  const [editIdx,setEditIdx]=useState(null);
+  const [editCard,setEditCard]=useState(null);
+  const [artUrl,setArtUrl]=useState('');
+
+  function saveEdit(){
+    const updated=[...cards];
+    updated[editIdx]={...editCard,art:artUrl};
+    setCards(updated);
+    onSave(updated);
+    setEditIdx(null);
+  }
+
+  return React.createElement('div',{className:'screen'},
+    React.createElement('div',{style:{display:'flex',alignItems:'center',gap:'10px',marginBottom:'4px'}},
+      React.createElement('h1',null,'Card Pool Editor'),
+      React.createElement('span',{style:{fontSize:'10px',color:'var(--rust)',fontFamily:'Cinzel,serif',marginLeft:'auto'}},'WARLORD MODE')
+    ),
+    React.createElement('p',{style:{marginBottom:'8px'}},'Tap any card to edit its name, text, or art URL.'),
+    React.createElement('div',{className:'card-grid'},
+      cards.map((c,i)=>React.createElement('div',{key:c.id,className:'card',onClick:()=>{setEditIdx(i);setEditCard({...c});setArtUrl(c.art||'');}},
+        React.createElement('div',{className:'card-name'},c.name),
+        React.createElement('div',{className:'card-art'},
+          c.art?React.createElement('img',{src:c.art,alt:c.name}):React.createElement('span',null,'[tap to edit]')
+        ),
+        React.createElement('div',{className:'card-text'},c.text||'No text set')
+      ))
+    ),
+    React.createElement('button',{className:'btn',style:{marginTop:'12px'},onClick:onBack},'← Back to Menu'),
+
+    editIdx!==null&&React.createElement(Modal,null,
+      React.createElement('h3',null,`Edit — ${editCard.name}`),
+      React.createElement('div',{className:'input-row'},
+        React.createElement('label',null,'Card name'),
+        React.createElement('input',{value:editCard.name,onChange:e=>setEditCard({...editCard,name:e.target.value})})
+      ),
+      React.createElement('div',{className:'input-row'},
+        React.createElement('label',null,'Rules text'),
+        React.createElement('input',{value:editCard.text,onChange:e=>setEditCard({...editCard,text:e.target.value})})
+      ),
+      React.createElement('div',{className:'input-row'},
+        React.createElement('label',null,'Art image URL'),
+        React.createElement('input',{value:artUrl,onChange:e=>setArtUrl(e.target.value),placeholder:'https://...'})
+      ),
+      React.createElement('button',{className:'btn btn-primary',onClick:saveEdit},'Save Card'),
+      React.createElement('button',{className:'btn',onClick:()=>setEditIdx(null)},'Cancel')
+    )
+  );
+}
+
+// DECK BUILDER
+function DeckBuilder({pool,onStart,onBack}){
+  const [selected,setSelected]=useState([]);
+  const NEEDED=18;
+  function toggle(id){
+    if(selected.includes(id)){setSelected(selected.filter(x=>x!==id));}
+    else if(selected.length<NEEDED){setSelected([...selected,id]);}
+  }
+  return React.createElement('div',{className:'screen'},
+    React.createElement('div',{style:{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:'4px'}},
+      React.createElement('h1',null,'Build Your Deck'),
+      React.createElement('span',{className:`pill ${selected.length===NEEDED?'pill-green':'pill-gold'}`},`${selected.length} / ${NEEDED}`)
+    ),
+    React.createElement('p',{style:{marginBottom:'8px'}},'Select exactly 18 cards from the pool of 30.'),
+    React.createElement('div',{className:'card-grid'},
+      pool.map(c=>React.createElement(CardDisplay,{
+        key:c.id,card:c,
+        selected:selected.includes(c.id),
+        onClick:()=>toggle(c.id),
+        locked:!selected.includes(c.id)&&selected.length>=NEEDED
+      }))
+    ),
+    selected.length===NEEDED&&React.createElement('button',{className:'btn btn-success',style:{position:'sticky',bottom:'12px',marginTop:'12px'},onClick:()=>onStart(selected.map(id=>pool.find(c=>c.id===id)))},'March to Battle →'),
+    React.createElement('button',{className:'btn',onClick:onBack},'← Back')
+  );
+}
+
+// GAME
+function GameWrapper({deck,onReset}){
+  const [state,setState]=useState({
+    phase:'draw_initial',
+    drawPile:shuffle(deck),
+    hand:[],active:[],discard:[],selectedInHand:[],
+    turn:1,primaryTotal:0,secondaryTotal:0,
+    modal:null,tempScores:{p:'',s:''}
+  });
+  const s=state;
+  const set=u=>setState(p=>({...p,...(typeof u==='function'?u(p):u)}));
+
+  function drawN(pile,h,n){const d=pile.slice(0,n);return{newHand:[...h,...d],newPile:pile.slice(n)};}
+
+  useEffect(()=>{
+    if(s.phase==='draw_initial'){
+      const{newHand,newPile}=drawN(s.drawPile,[],5);
+      set({hand:newHand,drawPile:newPile,phase:'turn1_mulligan'});
+    }
+  },[]);
+
+  function toggleSel(card,max=3){
+    const sel=s.selectedInHand;
+    if(sel.find(c=>c.id===card.id)){set({selectedInHand:sel.filter(c=>c.id!==card.id)});}
+    else if(sel.length<max){set({selectedInHand:[...sel,card]});}
+  }
+
+  function confirmActive(){
+    const chosen=s.selectedInHand;
+    const remaining=s.hand.filter(c=>!chosen.find(x=>x.id===c.id));
+    let pile=s.drawPile,newH=remaining;
+    if(s.turn<4){const need=5-remaining.length;if(need>0){const r=drawN(pile,newH,need);newH=r.newHand;pile=r.newPile;}}
+    set({active:chosen,selectedInHand:[],hand:newH,drawPile:pile,phase:`turn${s.turn}_play`});
+  }
+
+  function submitScore(){
+    const p=parseInt(s.tempScores.p)||0,sc=parseInt(s.tempScores.s)||0;
+    const newP=s.primaryTotal+p,newS=s.secondaryTotal+sc;
+    if(s.turn===4){set({primaryTotal:newP,secondaryTotal:newS,modal:null,phase:'game_over'});return;}
+    set({primaryTotal:newP,secondaryTotal:newS,modal:'reaction',tempScores:{p:'',s:''}});
+  }
+
+  function doReaction(yes){
+    if(yes){set({modal:null,selectedInHand:[],phase:`turn${s.turn}_reaction`});}
+    else{set({modal:null});advanceToNext({});}
+  }
+
+  function confirmReaction(){
+    const disc=s.selectedInHand;
+    const newH=s.hand.filter(c=>!disc.find(x=>x.id===c.id));
+    const{newHand,newPile}=drawN(s.drawPile,newH,2);
+    advanceToNext({hand:newHand,drawPile:newPile,discard:[...s.discard,...disc]});
+  }
+
+  function advanceToNext(overrides={}){
+    const hand=overrides.hand!==undefined?overrides.hand:s.hand;
+    const drawPile=overrides.drawPile!==undefined?overrides.drawPile:s.drawPile;
+    const extraDiscard=overrides.discard||s.discard;
+    const nextTurn=s.turn+1;
+    if(nextTurn>4){set({phase:'game_over'});return;}
+    const newDiscard=[...extraDiscard,...s.active];
+    const remaining=hand.filter(c=>!s.active.find(x=>x.id===c.id));
+    set({turn:nextTurn,active:[],discard:newDiscard,hand:remaining,drawPile,selectedInHand:[],phase:`turn${nextTurn}_pick_active`});
+  }
+
+  const ph=s.phase;
+  const activeIds=s.active.map(c=>c.id);
+  const handWithoutActive=s.hand.filter(c=>!activeIds.includes(c.id));
+  const isMulligan=ph==='turn1_mulligan';
+  const isPickActive=ph.includes('pick_active');
+  const isPlay=ph.includes('_play');
+  const isReact=ph.includes('reaction');
+
+  return React.createElement('div',{className:'screen'},
+    React.createElement(TurnDots,{turn:s.turn}),
+    React.createElement(ScoreBar,{primary:s.primaryTotal,secondary:s.secondaryTotal,turn:s.turn}),
+
+    isMulligan&&React.createElement('div',null,
+      React.createElement('div',{className:'section-label'},'Opening Hand'),
+      React.createElement('div',{className:'card-grid'},s.hand.map(c=>React.createElement(CardDisplay,{key:c.id,card:c,locked:true}))),
+      React.createElement('div',{className:'divider'}),
+      React.createElement('p',{style:{marginBottom:'8px'}},'Shuffle your hand back into your deck and draw 4 instead?'),
+      React.createElement('button',{className:'btn btn-primary',onClick:()=>{
+        const np=shuffle([...s.hand,...s.drawPile]);
+        const{newHand,newPile}=drawN(np,[],4);
+        set({hand:newHand,drawPile:newPile,phase:'turn1_pick_active'});
+      }},'Redeploy — Draw 4'),
+      React.createElement('button',{className:'btn',onClick:()=>set({phase:'turn1_pick_active'})},'Hold Position — Keep Hand')
+    ),
+
+    (isPickActive||isPlay)&&React.createElement('div',null,
+      s.active.length>0&&React.createElement('div',null,
+        React.createElement('div',{className:'section-label'},'Active Orders (locked)'),
+        React.createElement('div',{className:'card-grid'},s.active.map(c=>React.createElement(CardDisplay,{key:c.id,card:c,showActive:true,locked:true})))
+      ),
+      React.createElement('div',{className:'hand-section'},
+        React.createElement('div',{style:{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:'6px'}},
+          React.createElement('span',{className:'section-label',style:{margin:0}},
+            isPickActive?`Choose 3 active orders (${s.selectedInHand.length}/3)`:'Hand'
+          ),
+          React.createElement('span',{className:'deck-count'},`Deck: ${s.drawPile.length} | Discard: ${s.discard.length}`)
+        ),
+        React.createElement('div',{className:'card-grid'},
+          handWithoutActive.map(c=>{
+            const sel=!!s.selectedInHand.find(x=>x.id===c.id);
+            const locked=isPlay||(isPickActive&&s.selectedInHand.length>=3&&!sel);
+            return React.createElement(CardDisplay,{key:c.id,card:c,selected:sel,locked,onClick:()=>isPickActive&&toggleSel(c,3)});
+          })
+        )
+      ),
+      isPickActive&&s.selectedInHand.length===3&&
+        React.createElement('button',{className:'btn btn-success',onClick:confirmActive},'Commit Orders →'),
+      isPlay&&React.createElement('button',{className:'btn btn-danger',onClick:()=>set({modal:'confirm_end'}),style:{marginTop:'8px'}},'End Turn')
+    ),
+
+    isReact&&React.createElement('div',null,
+      React.createElement('div',{className:'section-label'},`Discard 2 cards (${s.selectedInHand.length}/2)`),
+      React.createElement('div',{className:'card-grid'},
+        s.hand.map(c=>{
+          const sel=!!s.selectedInHand.find(x=>x.id===c.id);
+          const locked=s.selectedInHand.length>=2&&!sel;
+          return React.createElement(CardDisplay,{key:c.id,card:c,selected:sel,locked,onClick:()=>toggleSel(c,2)});
+        })
+      ),
+      s.selectedInHand.length===2&&React.createElement('button',{className:'btn btn-primary',onClick:confirmReaction},'Discard & Draw 2 →'),
+      React.createElement('button',{className:'btn',onClick:()=>{set({selectedInHand:[]});advanceToNext();}},s.selectedInHand.length<2?'Skip Reaction':'Cancel')
+    ),
+
+    ph==='game_over'&&React.createElement('div',{style:{textAlign:'center',padding:'24px 0'}},
+      React.createElement('div',{style:{fontSize:'32px',color:'var(--rust)',letterSpacing:'4px',marginBottom:'8px'}},'✠'),
+      React.createElement('h1',{style:{fontSize:'20px',marginBottom:'4px',letterSpacing:'0.1em'}},'Battle Concluded'),
+      React.createElement('p',{style:{marginBottom:'20px'}},'The tides of battle have turned.'),
+      React.createElement('div',{style:{display:'grid',gridTemplateColumns:'1fr 1fr 1fr',gap:'8px',marginBottom:'28px'}},
+        [['Primary',s.primaryTotal,'var(--gold)'],['Secondary',s.secondaryTotal,'#8BBB52'],['Total',s.primaryTotal+s.secondaryTotal,'var(--parchment)']].map(([l,v,c])=>
+          React.createElement('div',{key:l,style:{background:'var(--card-bg)',border:'1px solid var(--border-col)',borderRadius:'4px',padding:'12px 8px',textAlign:'center'}},
+            React.createElement('div',{style:{fontFamily:'Cinzel,serif',fontSize:'9px',color:'var(--parchment-dim)',marginBottom:'6px',textTransform:'uppercase',letterSpacing:'0.06em'}},l),
+            React.createElement('div',{style:{fontSize:'28px',color:c}},v)
+          )
+        )
+      ),
+      React.createElement('button',{className:'btn btn-primary',onClick:onReset},'Create New Deck?')
+    ),
+
+    s.modal==='confirm_end'&&React.createElement(Modal,null,
+      React.createElement('h3',null,'End the Turn?'),
+      React.createElement('p',null,'Are you sure you wish to end this turn? Orders cannot be revoked.'),
+      React.createElement('button',{className:'btn btn-danger',onClick:()=>set({modal:'score_entry'})},'Yes — End Turn'),
+      React.createElement('button',{className:'btn',onClick:()=>set({modal:null})},'Hold — Cancel')
+    ),
+
+    s.modal==='score_entry'&&React.createElement(Modal,null,
+      React.createElement('h3',null,`Turn ${s.turn} — Record Scores`),
+      React.createElement('p',null,'Record your points scored this turn.'),
+      React.createElement('div',{className:'input-row'},
+        React.createElement('label',null,'Primary Points'),
+        React.createElement('input',{type:'number',inputMode:'numeric',value:s.tempScores.p,onChange:e=>set({tempScores:{...s.tempScores,p:e.target.value}}),placeholder:'0'})
+      ),
+      React.createElement('div',{className:'input-row'},
+        React.createElement('label',null,'Secondary Points'),
+        React.createElement('input',{type:'number',inputMode:'numeric',value:s.tempScores.s,onChange:e=>set({tempScores:{...s.tempScores,s:e.target.value}}),placeholder:'0'})
+      ),
+      React.createElement('button',{className:'btn btn-success',onClick:submitScore},'Record & Continue')
+    ),
+
+    s.modal==='reaction'&&React.createElement(Modal,null,
+      React.createElement('h3',null,'Expend Reaction?'),
+      React.createElement('p',null,'Do you wish to expend a Reaction to discard 2 cards from your hand and draw 2 replacements?'),
+      React.createElement('button',{className:'btn btn-primary',onClick:()=>doReaction(true)},'Yes — Discard 2 Cards'),
+      React.createElement('button',{className:'btn',onClick:()=>doReaction(false)},'No — Advance')
+    )
+  );
+}
+
+// HOME SCREEN
+function Home({onPlay,onEdit}){
+  return React.createElement('div',{className:'screen',style:{display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',minHeight:'100vh',padding:'24px',gap:'0'}},
+    React.createElement('img',{
+      src:LOGO_URL,
+      alt:'Toowoomba Heresy',
+      style:{width:'240px',maxWidth:'90%',marginBottom:'4px',filter:'invert(1) sepia(1) saturate(0.4) brightness(0.85)',opacity:0.92}
+    }),
+    React.createElement('div',{className:'ornament',style:{margin:'4px 0',letterSpacing:'12px',fontSize:'12px'}},'— ✠ —'),
+    React.createElement('h1',{style:{textAlign:'center',fontSize:'13px',letterSpacing:'0.18em',color:'var(--parchment-dim)',marginBottom:'2px'}},'TIDES OF BATTLE'),
+    React.createElement('p',{style:{textAlign:'center',fontSize:'11px',color:'rgba(212,201,168,0.4)',marginBottom:'28px',letterSpacing:'0.06em'}},'Wargaming Companion'),
+    React.createElement('div',{style:{width:'100%',maxWidth:'260px',display:'flex',flexDirection:'column',gap:'0'}},
+      React.createElement('button',{className:'btn btn-primary',onClick:onPlay},'Build Deck & Play'),
+      React.createElement('button',{className:'btn',onClick:onEdit,style:{borderColor:'var(--rust)',color:'var(--rust-light)'}},'Edit Card Pool')
+    )
+  );
+}
+
+// ROOT APP
+function App(){
+  const [appState,setAppState]=useState('home');
+  const [pinUnlocked,setPinUnlocked]=useState(false);
+  const [pool,setPool]=useState(DEFAULT_POOL);
+  const [deck,setDeck]=useState(null);
+
+  if(appState==='home')return React.createElement(Home,{
+    onPlay:()=>setAppState('deck'),
+    onEdit:()=>{setPinUnlocked(false);setAppState('edit_gate');}
+  });
+
+  if(appState==='edit_gate'){
+    if(!pinUnlocked)return React.createElement(PinGate,{onSuccess:()=>{setPinUnlocked(true);setAppState('edit');}});
+  }
+
+  if(appState==='edit')return React.createElement(CardEditor,{pool,onSave:updated=>setPool(updated),onBack:()=>{setPinUnlocked(false);setAppState('home');}});
+
+  if(appState==='deck')return React.createElement(DeckBuilder,{pool,onStart:d=>{setDeck(d);setAppState('game');},onBack:()=>setAppState('home')});
+
+  if(appState==='game')return React.createElement(GameWrapper,{key:Date.now(),deck,onReset:()=>{setDeck(null);setAppState('deck');}});
+
+  return null;
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(React.createElement(App));
+</script>
+</body>
+</html>
