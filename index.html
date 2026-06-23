@@ -34,7 +34,7 @@ p{color:var(--parchment-dim);font-size:12px;line-height:1.5}
 .card-art{width:100%;height:46px;border-radius:3px;margin:4px 0;background:#1a1612;border:1px solid var(--border-col);display:flex;align-items:center;justify-content:center;font-size:8px;color:rgba(212,201,168,0.3);overflow:hidden}
 .card-art img{width:100%;height:100%;object-fit:cover;border-radius:2px}
 .card-text{font-size:8px;color:var(--parchment-dim);line-height:1.3;flex:1;font-style:italic}
-.card-badge{position:absolute;top:3px;right:3px;font-size:7px;padding:1px 4px;border-radius:2px;font-family:'Cinzel',serif;font-weight:600}
+.card-badge{display:block;width:calc(100% + 12px);margin:-6px -6px 4px -6px;font-size:8px;padding:3px 6px;border-radius:3px 3px 0 0;font-family:'Cinzel',serif;font-weight:600;text-align:center;letter-spacing:0.06em}
 .badge-active{background:rgba(107,154,58,0.2);color:#8BBB52;border:1px solid rgba(107,154,58,0.4)}
 .score-bar{background:var(--card-bg);border:1px solid var(--border-col);border-radius:4px;padding:10px 12px;margin-bottom:10px;display:flex;gap:8px}
 .score-item{text-align:center;flex:1;border-right:1px solid var(--border-col)}
@@ -64,6 +64,19 @@ p{color:var(--parchment-dim);font-size:12px;line-height:1.5}
 .pill-gold{background:rgba(201,168,76,0.12);color:var(--gold);border:1px solid rgba(201,168,76,0.3)}
 .pill-green{background:rgba(107,154,58,0.12);color:#8BBB52;border:1px solid rgba(107,154,58,0.3)}
 .ornament{text-align:center;color:var(--rust);letter-spacing:8px;margin:4px 0;opacity:0.7}
+.info-tab-btn{position:fixed;bottom:16px;right:16px;z-index:200;width:44px;height:44px;border-radius:50%;background:#111;border:1px solid var(--border-bright);color:var(--parchment);font-family:'Cinzel',serif;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 12px rgba(0,0,0,0.7)}
+.info-tab-btn:active{transform:scale(0.93)}
+.info-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.92);z-index:300;overflow-y:auto;padding:20px 16px 40px}
+.info-close{position:sticky;top:0;display:flex;justify-content:flex-end;margin-bottom:12px}
+.info-close button{background:#111;border:1px solid var(--border-bright);color:var(--parchment);font-family:'Cinzel',serif;font-size:11px;padding:6px 14px;border-radius:4px;cursor:pointer;letter-spacing:0.05em}
+.info-section{margin-bottom:20px}
+.info-section h3{font-family:'Cinzel',serif;font-size:13px;font-weight:600;color:var(--gold);letter-spacing:0.08em;text-transform:uppercase;border-bottom:1px solid var(--border-col);padding-bottom:6px;margin-bottom:10px}
+.info-section p{font-size:12px;color:var(--parchment-dim);line-height:1.7;margin-bottom:6px}
+.info-section ul{list-style:none;padding:0;margin:0}
+.info-section ul li{font-size:12px;color:var(--parchment-dim);line-height:1.7;padding-left:14px;position:relative;margin-bottom:4px}
+.info-section ul li::before{content:'—';position:absolute;left:0;color:var(--rust);font-size:10px}
+.info-rule-name{color:var(--parchment);font-weight:600}
+.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
 </style>
 </head>
 <body>
@@ -89,26 +102,25 @@ const DEFAULT_POOL=[
   {id:11,name:'Defend Objective 5',text:'2VP if you Control the Objective at the End of the Game Turn.',art:''},
   {id:12,name:'Defend Objective 6',text:'2VP if you Control the Objective at the End of the Game Turn.',art:''},
   {id:13,name:'Advance',text:'2VP if none of your units are in your own deployment zone at the end of the game turn.',art:''},
-  {id:14,name:'Behind Enemy Lines',text:'1VP if you have a unit within your enemies depolyment zone at the end of the game turn. 2VP if you have 3+.',art:''},
+  {id:14,name:'Behind Enemy Lines',text:'1VP if you have a unit within your enemies deployment zone at the end of the game turn. 2VP if you have 3+.',art:''},
   {id:15,name:'Hold the Line',text:'1VP if you have 3 units within your own deployment zone at the end of the game turn and your enemy has none.',art:''},
-  {id:16,name:'Supremacy',text:'2VP if you control 3+ obectives at the end of the game turn.',art:''},
+  {id:16,name:'Supremacy',text:'2VP if you control 3+ objectives at the end of the game turn.',art:''},
   {id:17,name:'Domination',text:'5VP if you control all of the objectives at the end of the game turn.',art:''},
   {id:18,name:'Mission Critical Objective',text:'Roll a D6 at the start of your turn to Randomly Select an Objective. This Objective is worth an additional 2VP if you control it at the end of the player turn and 3VP if your opponent controlled it at the start of your player turn.',art:''},
   {id:19,name:'Blood and Guts',text:'1VP if an enemy unit is destroyed in the combat phase this turn. 2VP if 3+ Units were destroyed.',art:''},
   {id:20,name:'Overwhelming Firepower',text:'1VP if an enemy unit is destroyed in the shooting phase your turn. 2VP if 3+ Units were destroyed.',art:''},
-  {id:21,name:'No Prisoners',text:'1VP if an enemy unit is destroyed in  your turn. 2VP if 3+ Units were destroyed.',art:''},
-  {id:22,name:'Area Denial',text:'1VP if there are no enemy units within 6” of the centre of the board at the end of the game turn. 2VP if there are no enemy units within 12” at the end of the game turn.',art:''},
-  {id:23,name:'Psychological Warfare',text:'1 VP if you inflict a status upon or cause your opponent to fail a morale check this game turn. 2VP if you do this to 3+ units.',art:''},
+  {id:21,name:'No Prisoners',text:'1VP if an enemy unit is destroyed in your turn. 2VP if 3+ Units were destroyed.',art:''},
+  {id:22,name:'Area Denial',text:'1VP if there are no enemy units within 6" of the centre of the board at the end of the game turn. 2VP if there are no enemy units within 12" at the end of the game turn.',art:''},
+  {id:23,name:'Psychological Warfare',text:'1VP if you inflict a status upon or cause your opponent to fail a morale check this game turn. 2VP if you do this to 3+ units.',art:''},
   {id:24,name:'Master the Warp',text:'Score 1VP for Manifesting a power or slaying a psyker this turn.',art:''},
   {id:25,name:'Kingslayer',text:'2VP if an enemy High Command unit is dead or was slain this turn.',art:''},
   {id:26,name:'Champion Duelist',text:'Score 1VP for each challenge won this turn.',art:''},
-  {id:27,name:'Assasinate',text:'Score 1VP for Killing an Enemy Command or High Command unit this turn. 2VP for killing 3+.',art:''},
-  {id:28,name:'Big Game Hunter',text:'1VP If you kill an enemy unit with T6 or higher or a Vehicle. 2VP if it’s a Lord of War or Command Choice.',art:''},
+  {id:27,name:'Assassinate',text:'Score 1VP for Killing an Enemy Command or High Command unit this turn. 2VP for killing 3+.',art:''},
+  {id:28,name:'Big Game Hunter',text:"1VP if you kill an enemy unit with T6 or higher or a Vehicle. 2VP if it's a Lord of War or Command Choice.",art:''},
   {id:29,name:'Scour the Skies',text:'1VP if you kill a flyer this turn.',art:''},
-  {id:30,name:'Priority Orders',text:'Double the VP Received from another active card this game turn.',art:''},   
+  {id:30,name:'Priority Orders',text:'Double the VP Received from another active card this game turn.',art:''},
+];
 
-  ];
-   
 function shuffle(arr){const a=[...arr];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a;}
 
 function CardDisplay({card,selected,onClick,locked,showActive}){
@@ -383,6 +395,64 @@ function GameWrapper({deck,onReset}){
   );
 }
 
+
+function InfoTab(){
+  const [open,setOpen]=React.useState(false);
+  return React.createElement(React.Fragment,null,
+    React.createElement('button',{className:'info-tab-btn',onClick:()=>setOpen(true)},'?'),
+    open&&React.createElement('div',{className:'info-overlay'},
+      React.createElement('div',{className:'info-close'},
+        React.createElement('button',{onClick:()=>setOpen(false),style:{textTransform:'uppercase',letterSpacing:'0.08em'}},'Close ×')
+      ),
+      React.createElement('div',{style:{textAlign:'center',marginBottom:'16px'}},
+        React.createElement('h2',{style:{fontFamily:"'Cinzel',serif",fontSize:'16px',color:'var(--parchment)',letterSpacing:'0.1em'}},'Tides of Battle Mission'),
+        React.createElement('p',{style:{fontSize:'11px',color:'var(--parchment-dim)',fontStyle:'italic',marginTop:'6px',lineHeight:'1.6'}},'Designed to represent the sometime chaotic nature of battles in the age of darkness. Players must score victory points from activated cards each turn.')
+      ),
+      React.createElement('div',{className:'info-grid'},
+        React.createElement('div',null,
+          React.createElement('div',{className:'info-section'},
+            React.createElement('h3',null,'Victory Conditions'),
+            React.createElement('ul',null,
+              React.createElement('li',null,'At the end of each player turn, the active player scores VP only from active cards in their Tides of Battle Deck.'),
+              React.createElement('li',null,'Players may also score VP from the secondary objectives listed.'),
+              React.createElement('li',null,'At the end of Turn 4 the player with the highest total VP is the winner.')
+            )
+          ),
+          React.createElement('div',{className:'info-section'},
+            React.createElement('h3',null,'Deployment'),
+            React.createElement('p',null,'Mission set up and deployment follows all the rules from the core rulebook.')
+          ),
+          React.createElement('div',{className:'info-section'},
+            React.createElement('h3',null,'Objectives'),
+            React.createElement('ul',null,
+              React.createElement('li',null,'This mission has 6 numbered objectives.'),
+              React.createElement('li',null,'Players take turns placing them 12” from a board edge and 10” from any other objective.'),
+              React.createElement('li',null,'Points from CAPTURE or DEFEND cards can be modified by the Line(X) special rule or equivalents.'),
+              React.createElement('li',null,'Players may also score from the Vanguard(X) special rule from any objective regardless of current Tides of Battle cards in play.')
+            )
+          )
+        ),
+        React.createElement('div',null,
+          React.createElement('div',{className:'info-section'},
+            React.createElement('h3',null,'The First Turn'),
+            React.createElement('p',null,'The player going second can seize the initiative, otherwise the first turn commences.')
+          ),
+          React.createElement('div',{className:'info-section'},
+            React.createElement('h3',null,'Mission Special Rules'),
+            React.createElement('p',null,React.createElement('span',{className:'info-rule-name'},'Tides of Battle: '),'This mission is played using the Toowoomba Heresy Tides of Battle Deck which has its own rules contained within the deck.'),
+            React.createElement('p',null,React.createElement('span',{className:'info-rule-name'},'Secret Objectives: '),'If both players agree, active cards may be played face down rather than face up.')
+          ),
+          React.createElement('div',{className:'info-section'},
+            React.createElement('h3',null,'Secondary Objectives'),
+            React.createElement('p',null,React.createElement('span',{className:'info-rule-name'},'First Strike: '),'+3VP for causing an enemy unit to have all their models removed as casualties in each player’s first active turn.'),
+            React.createElement('p',null,React.createElement('span',{className:'info-rule-name'},'That Looks Important: '),'+3VP for destroying a Lord of War or Warlord.')
+          )
+        )
+      )
+    )
+  );
+}
+
 function Home({onPlay,onEdit}){
   return React.createElement('div',{className:'screen',style:{display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',minHeight:'100vh',padding:'24px',gap:'0',background:'var(--black)'}},
     React.createElement('img',{
@@ -404,11 +474,14 @@ function App(){
   const [pinUnlocked,setPinUnlocked]=useState(false);
   const [pool,setPool]=useState(DEFAULT_POOL);
   const [deck,setDeck]=useState(null);
-  if(appState==='home')return React.createElement(Home,{onPlay:()=>setAppState('deck'),onEdit:()=>{setPinUnlocked(false);setAppState('pin');}});
-  if(appState==='pin')return React.createElement(PinGate,{onSuccess:()=>{setPinUnlocked(true);setAppState('edit');}});
-  if(appState==='edit')return React.createElement(CardEditor,{pool,onSave:u=>setPool(u),onBack:()=>{setPinUnlocked(false);setAppState('home');}});
-  if(appState==='deck')return React.createElement(DeckBuilder,{pool,onStart:d=>{setDeck(d);setAppState('game');},onBack:()=>setAppState('home')});
-  if(appState==='game')return React.createElement(GameWrapper,{key:Date.now(),deck,onReset:()=>{setDeck(null);setAppState('deck');}});
+  function wrap(child){
+    return React.createElement(React.Fragment,null,child,React.createElement(InfoTab));
+  }
+  if(appState==='home')return wrap(React.createElement(Home,{onPlay:()=>setAppState('deck'),onEdit:()=>{setPinUnlocked(false);setAppState('pin');}}));
+  if(appState==='pin')return wrap(React.createElement(PinGate,{onSuccess:()=>{setPinUnlocked(true);setAppState('edit');}}));
+  if(appState==='edit')return wrap(React.createElement(CardEditor,{pool,onSave:u=>setPool(u),onBack:()=>{setPinUnlocked(false);setAppState('home');}}));
+  if(appState==='deck')return wrap(React.createElement(DeckBuilder,{pool,onStart:d=>{setDeck(d);setAppState('game');},onBack:()=>setAppState('home')}));
+  if(appState==='game')return wrap(React.createElement(GameWrapper,{key:Date.now(),deck,onReset:()=>{setDeck(null);setAppState('deck');}}));
   return null;
 }
 ReactDOM.createRoot(document.getElementById('root')).render(React.createElement(App));
