@@ -32,7 +32,7 @@ p{color:var(--parchment-dim);font-size:12px;line-height:1.5}
 .card.locked{cursor:default}
 .card-name{font-family:'Cinzel',serif;font-size:9px;font-weight:600;line-height:1.3;color:var(--parchment);letter-spacing:0.03em}
 .card-art{width:100%;height:46px;border-radius:3px;margin:4px 0;background:#1a1612;border:1px solid var(--border-col);display:flex;align-items:center;justify-content:center;font-size:8px;color:rgba(212,201,168,0.3);overflow:hidden}
-.card-art img{width:100%;height:100%;object-fit:cover;border-radius:2px}
+.card-art img{width:100%;height:100%;object-fit:contain;border-radius:2px;background:#1a1612}
 .card-text{font-size:8px;color:var(--parchment-dim);line-height:1.3;flex:1;font-style:italic}
 .card-badge{display:block;width:calc(100% + 12px);margin:-6px -6px 4px -6px;font-size:8px;padding:3px 6px;border-radius:3px 3px 0 0;font-family:'Cinzel',serif;font-weight:600;text-align:center;letter-spacing:0.06em}
 .badge-active{background:rgba(107,154,58,0.2);color:#8BBB52;border:1px solid rgba(107,154,58,0.4)}
@@ -109,7 +109,7 @@ const DEFAULT_POOL=[
   {id:18,name:'Mission Critical Objective',text:'Roll a D6 at the start of your turn to Randomly Select an Objective. This Objective is worth an additional 2VP if you control it at the end of the player turn and 3VP if your opponent controlled it at the start of your player turn.',art:'RES/SIEZE.png'},
   {id:19,name:'Blood and Guts',text:'1VP if an enemy unit is destroyed in the combat phase this turn. 2VP if 3+ Units were destroyed.',art:'RES/PURGE.png'},
   {id:20,name:'Overwhelming Firepower',text:'1VP if an enemy unit is destroyed in the shooting phase your turn. 2VP if 3+ Units were destroyed.',art:'RES/PURGE.png'},
-  {id:21,name:'No Prisoners',text:'1VP if an enemy unit is destroyed in your turn. 2VP if 3+ Units were destroyed.',art:''},
+  {id:21,name:'No Prisoners',text:'1VP if an enemy unit is destroyed in your turn. 2VP if 3+ Units were destroyed.',art:'RES/PURGE.png'},
   {id:22,name:'Area Denial',text:'1VP if there are no enemy units within 6" of the centre of the board at the end of the game turn. 2VP if there are no enemy units within 12" at the end of the game turn.',art:'RES/PURGE.png'},
   {id:23,name:'Psychological Warfare',text:'1VP if you inflict a status upon or cause your opponent to fail a morale check this game turn. 2VP if you do this to 3+ units.',art:'RES/PURGE.png'},
   {id:24,name:'Master the Warp',text:'Score 1VP for Manifesting a power or slaying a psyker this turn.',art:'RES/PURGE.png'},
