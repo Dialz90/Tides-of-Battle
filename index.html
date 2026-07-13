@@ -64,6 +64,30 @@ p{color:var(--parchment-dim);font-size:12px;line-height:1.5}
 .pill-gold{background:rgba(201,168,76,0.12);color:var(--gold);border:1px solid rgba(201,168,76,0.3)}
 .pill-green{background:rgba(107,154,58,0.12);color:#8BBB52;border:1px solid rgba(107,154,58,0.3)}
 .ornament{text-align:center;color:var(--rust);letter-spacing:8px;margin:4px 0;opacity:0.7}
+.shuffle-overlay{position:fixed;inset:0;background:#0a0a0a;z-index:500;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:24px}
+.shuffle-title{font-family:'Cinzel',serif;font-size:14px;letter-spacing:0.15em;color:var(--parchment-dim);text-transform:uppercase}
+.card-fan{position:relative;width:160px;height:200px}
+.fan-card{position:absolute;width:86px;height:118px;border-radius:6px;background:#000;border:1px solid var(--border-bright);top:50%;left:50%;transform-origin:bottom center;overflow:hidden;display:flex;align-items:center;justify-content:center}.fan-card-logo{width:85%;height:85%;object-fit:contain;opacity:1;filter:none;image-rendering:crisp-edges}
+@keyframes dealOut{0%{transform:translate(-50%,-50%) rotate(0deg) translateY(0px);opacity:1}60%{transform:translate(-50%,-50%) rotate(var(--r)) translateY(-20px);opacity:1}100%{transform:translate(-50%,-50%) rotate(var(--r)) translateY(0px);opacity:1}}
+@keyframes shuffleFlick{0%{transform:translate(-50%,-50%) rotate(var(--r)) translateY(0px)}25%{transform:translate(-50%,-50%) rotate(calc(var(--r) + 15deg)) translateY(-30px)}50%{transform:translate(-50%,-50%) rotate(calc(var(--r) - 10deg)) translateY(-15px)}75%{transform:translate(-50%,-50%) rotate(calc(var(--r) + 5deg)) translateY(-25px)}100%{transform:translate(-50%,-50%) rotate(var(--r)) translateY(0px)}}
+@keyframes gatherIn{0%{transform:translate(-50%,-50%) rotate(var(--r)) translateY(0px);opacity:1}100%{transform:translate(-50%,-50%) rotate(0deg) translateY(0px);opacity:0}}
+.shuffle-status{font-family:'Cinzel',serif;font-size:11px;color:var(--rust);letter-spacing:0.12em;min-height:18px}
+.draw-overlay{position:fixed;inset:0;background:rgba(10,10,10,0.97);z-index:500;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;padding:24px}
+.draw-title{font-family:'Cinzel',serif;font-size:12px;letter-spacing:0.15em;color:var(--parchment-dim);text-transform:uppercase;margin-bottom:4px}
+.draw-arena{position:relative;width:100%;max-width:320px;height:180px;display:flex;align-items:center;justify-content:center}
+.draw-deck{position:absolute;right:24px;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;align-items:center;gap:4px}
+.draw-deck-label{font-family:'Cinzel',serif;font-size:9px;color:var(--parchment-dim);letter-spacing:0.08em;margin-bottom:4px;text-transform:uppercase}
+.draw-deck-stack{position:relative;width:54px;height:76px}
+.deck-card-visual{position:absolute;width:58px;height:80px;border-radius:5px;background:#000;border:1px solid var(--border-bright);display:flex;align-items:center;justify-content:center;font-family:'Cinzel',serif;font-size:7px;color:var(--parchment-dim);letter-spacing:0.04em;text-align:center;overflow:hidden}.deck-card-logo{width:85%;height:85%;object-fit:contain;opacity:1;filter:none;image-rendering:crisp-edges}
+.discard-cards-row{display:flex;gap:8px;position:absolute;left:16px;top:50%;transform:translateY(-50%)}
+.discard-card-visual{width:58px;height:80px;border-radius:5px;background:#000;border:1px solid var(--rust);display:flex;align-items:center;justify-content:center;font-family:'Cinzel',serif;font-size:7px;color:var(--rust);letter-spacing:0.04em;text-align:center;padding:4px}
+.drawn-cards-row{display:flex;gap:8px;position:absolute;left:16px;top:50%;transform:translateY(-50%)}
+.drawn-card-visual{width:58px;height:80px;border-radius:5px;background:#000;border:1px solid var(--gold);display:flex;align-items:center;justify-content:center;font-family:'Cinzel',serif;font-size:7px;color:var(--gold);letter-spacing:0.04em;text-align:center;padding:4px}
+.draw-status{font-family:'Cinzel',serif;font-size:11px;color:var(--gold);letter-spacing:0.1em;min-height:18px;text-align:center}
+@keyframes slideToBottom{0%{transform:translate(0,0) rotate(0deg);opacity:1}40%{transform:translate(120px,-10px) rotate(8deg);opacity:1}100%{transform:translate(120px,80px) rotate(12deg);opacity:0}}
+@keyframes slideToBottomRight{0%{transform:translate(0,0) rotate(0deg);opacity:1}40%{transform:translate(140px,0px) rotate(-6deg);opacity:1}100%{transform:translate(140px,80px) rotate(-10deg);opacity:0}}
+@keyframes drawFromDeck{0%{transform:translate(0,0) rotate(0deg);opacity:0}30%{transform:translate(-80px,-30px) rotate(-8deg);opacity:1}100%{transform:translate(-130px,0px) rotate(0deg);opacity:1}}
+@keyframes drawFromDeck2{0%{transform:translate(0,0) rotate(0deg);opacity:0}30%{transform:translate(-80px,-20px) rotate(6deg);opacity:1}100%{transform:translate(-70px,0px) rotate(0deg);opacity:1}}
 .info-tab-btn{position:fixed;bottom:16px;right:16px;z-index:200;width:44px;height:44px;border-radius:50%;background:#111;border:1px solid var(--border-bright);color:var(--parchment);font-family:'Cinzel',serif;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 12px rgba(0,0,0,0.7)}
 .info-tab-btn:active{transform:scale(0.93)}
 .info-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.92);z-index:300;overflow-y:auto;padding:20px 16px 40px}
@@ -230,13 +254,149 @@ function CardEditor({pool,onSave,onBack}){
   );
 }
 
+
+function CardDrawAnimation({discardCards, drawCount, onDone}){
+  const [phase, setPhase] = useState('show');
+  // phase: show -> discard -> draw -> done
+  useEffect(()=>{
+    const t1 = setTimeout(()=>setPhase('discard'), 400);
+    const t2 = setTimeout(()=>setPhase('draw'), 1200);
+    const t3 = setTimeout(()=>setPhase('done'), 2200);
+    const t4 = setTimeout(()=>onDone(), 2500);
+    return()=>{[t1,t2,t3,t4].forEach(clearTimeout);};
+  },[]);
+
+  const numDiscard = discardCards ? discardCards.length : 0;
+  const numDraw = drawCount || numDiscard;
+
+  const discardAnims = ['slideToBottom','slideToBottomRight'];
+  const drawAnims = ['drawFromDeck','drawFromDeck2'];
+
+  return React.createElement('div',{className:'draw-overlay'},
+    React.createElement('div',{className:'draw-title'},
+      phase==='show'||phase==='discard' ? 'Discarding Cards…' :
+      phase==='draw' ? 'Drawing Replacements…' : 'Done'
+    ),
+    React.createElement('div',{className:'draw-arena'},
+      // Discard pile (left side)
+      phase !== 'done' && React.createElement('div',{className:'discard-cards-row'},
+        Array.from({length: numDiscard}).map((_,i)=>
+          React.createElement('div',{
+            key:i,
+            className:'discard-card-visual',
+            style: phase==='discard' ? {
+              animation:`${discardAnims[i%2]} 0.6s ease-in ${i*0.15}s forwards`
+            } : {}
+          }, React.createElement('img',{className:'deck-card-logo',src:LOGO_SRC,alt:'',style:{opacity:1,filter:'none'}}))
+        )
+      ),
+      // Drawn cards (left side, shown in draw phase)
+      phase==='draw' && React.createElement('div',{className:'drawn-cards-row'},
+        Array.from({length: numDraw}).map((_,i)=>
+          React.createElement('div',{
+            key:i,
+            className:'drawn-card-visual',
+            style:{animation:`${drawAnims[i%2]} 0.5s ease-out ${i*0.2}s both`}
+          }, React.createElement('img',{className:'deck-card-logo',src:LOGO_SRC,alt:'',style:{opacity:1,filter:'none'}}))
+        )
+      ),
+      // Deck stack (right side)
+      React.createElement('div',{className:'draw-deck'},
+        React.createElement('div',{className:'draw-deck-label'},'Deck'),
+        React.createElement('div',{className:'draw-deck-stack'},
+          [2,1,0].map(i=>React.createElement('div',{
+            key:i,
+            className:'deck-card-visual',
+            style:{
+              top:`${i*3}px`,left:`${i*2}px`,
+              zIndex:3-i,
+              borderColor: phase==='draw'&&i===0?'var(--gold)':'var(--border-bright)',
+              transition:'border-color 0.3s'
+            }
+          }, React.createElement('img',{className:'deck-card-logo',src:LOGO_SRC,alt:''})))
+        )
+      )
+    ),
+    React.createElement('div',{className:'draw-status'},
+      phase==='show' ? 'Preparing…' :
+      phase==='discard' ? `Sending ${numDiscard} card${numDiscard>1?'s':''} to the bottom…` :
+      phase==='draw' ? `Drawing ${numDraw} replacement${numDraw>1?'s':''}…` :
+      'Hand updated.'
+    )
+  );
+}
+
+function ShuffleAnimation({onDone}){
+  const [phase,setPhase]=useState('deal');
+  const [statusText,setStatusText]=useState('Preparing your deck…');
+  const cards=Array.from({length:7},(_,i)=>i);
+  const rotations=[-30,-20,-10,0,10,20,30];
+  useEffect(()=>{
+    const t1=setTimeout(()=>{setPhase('shuffle1');setStatusText('Shuffling…');},800);
+    const t2=setTimeout(()=>{setPhase('shuffle2');},1500);
+    const t3=setTimeout(()=>{setPhase('shuffle3');},2100);
+    const t4=setTimeout(()=>{setPhase('gather');setStatusText('Deck ready.');},2700);
+    const t5=setTimeout(()=>{onDone();},3400);
+    return()=>{[t1,t2,t3,t4,t5].forEach(clearTimeout);};
+  },[]);
+  function getStyle(i){
+    const r=rotations[i];
+    const base={
+      '--r':`${r}deg`,
+      transition:'transform 0.4s cubic-bezier(0.34,1.56,0.64,1), opacity 0.3s',
+    };
+    if(phase==='deal'){
+      return{...base,transform:`translate(-50%,-50%) rotate(0deg)`,opacity:i===3?1:0,animation:'none'};
+    }
+    if(phase==='shuffle1'||phase==='shuffle2'||phase==='shuffle3'){
+      const delay=i*0.04;
+      const flickDelay=phase==='shuffle1'?0:phase==='shuffle2'?0.1:0.05;
+      return{...base,
+        '--r':`${r}deg`,
+        animation:`shuffleFlick 0.5s ease-in-out ${(delay+flickDelay).toFixed(2)}s both`,
+        transform:`translate(-50%,-50%) rotate(${r}deg)`};
+    }
+    if(phase==='gather'){
+      return{...base,animation:`gatherIn 0.5s ease-in forwards`,transform:`translate(-50%,-50%) rotate(${r}deg)`};
+    }
+    return base;
+  }
+  return React.createElement('div',{className:'shuffle-overlay'},
+    React.createElement('div',{className:'shuffle-title'},'Toowoomba Heresy'),
+    React.createElement('div',{className:'card-fan'},
+      cards.map((i)=>React.createElement('div',{
+        key:i,
+        className:'fan-card',
+        style:{
+          ...getStyle(i),
+          background:i===3?'var(--card-bg)':'#1a1714',
+          borderColor:i===3?'var(--gold)':'rgba(212,201,168,0.2)',
+          boxShadow:i===3?'0 4px 20px rgba(201,168,76,0.15)':'none',
+          zIndex:i===3?10:i,
+        }
+      },
+        React.createElement('img',{className:'fan-card-logo',src:LOGO_SRC,alt:''})
+      ))
+    ),
+    React.createElement('div',{className:'shuffle-status'},statusText)
+  );
+}
+
 function DeckBuilder({pool,onStart,onBack}){
   const [selected,setSelected]=useState([]);
+  const [shuffling,setShuffling]=useState(false);
+  const [pendingDeck,setPendingDeck]=useState(null);
   const NEEDED=18;
   function toggle(id){
     if(selected.includes(id)){setSelected(selected.filter(x=>x!==id));}
     else if(selected.length<NEEDED){setSelected([...selected,id]);}
   }
+  function handleMarch(){
+    const deck=selected.map(id=>pool.find(c=>c.id===id));
+    setPendingDeck(deck);
+    setShuffling(true);
+  }
+  if(shuffling)return React.createElement(ShuffleAnimation,{onDone:()=>onStart(pendingDeck)});
   return React.createElement('div',{className:'screen'},
     React.createElement('div',{style:{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:'4px'}},
       React.createElement('h1',null,'Build Your Deck'),
@@ -246,7 +406,7 @@ function DeckBuilder({pool,onStart,onBack}){
     React.createElement('div',{className:'card-grid'},
       pool.map(c=>React.createElement(CardDisplay,{key:c.id,card:c,selected:selected.includes(c.id),onClick:()=>toggle(c.id),locked:!selected.includes(c.id)&&selected.length>=NEEDED}))
     ),
-    selected.length===NEEDED&&React.createElement('button',{className:'btn btn-success',style:{position:'sticky',bottom:'12px',marginTop:'12px'},onClick:()=>onStart(selected.map(id=>pool.find(c=>c.id===id)))},'March to Battle →'),
+    selected.length===NEEDED&&React.createElement('button',{className:'btn btn-success',style:{position:'sticky',bottom:'12px',marginTop:'12px'},onClick:handleMarch},'March to Battle →'),
     React.createElement('button',{className:'btn',onClick:onBack},'← Back')
   );
 }
@@ -257,6 +417,7 @@ function GameWrapper({deck,onReset}){
     hand:[],active:[],discard:[],selectedInHand:[],
     turn:1,primaryTotal:0,secondaryTotal:0,
     reactionUsed:false,reactionSelecting:false,
+    animating:false,animCards:[],animDrawCount:0,
     modal:null,tempScores:{p:'',s:''}
   });
   const s=state;
@@ -298,7 +459,8 @@ function GameWrapper({deck,onReset}){
     const disc=s.selectedInHand;
     const newH=s.hand.filter(c=>!disc.find(x=>x.id===c.id));
     const{newHand,newPile}=drawN(s.drawPile,newH,2);
-    set({hand:newHand,drawPile:newPile,discard:[...s.discard,...disc],selectedInHand:[],reactionSelecting:false});
+    set({animating:true,animCards:disc,animDrawCount:2,
+      hand:newHand,drawPile:newPile,discard:[...s.discard,...disc],selectedInHand:[],reactionSelecting:false});
   }
   const ph=s.phase;
   const activeIds=s.active.map(c=>c.id);
@@ -306,6 +468,11 @@ function GameWrapper({deck,onReset}){
   const isMulligan=ph==='turn1_mulligan';
   const isPickActive=ph.includes('pick_active');
   const isPlay=ph.includes('_play');
+  if(s.animating) return React.createElement(CardDrawAnimation,{
+    discardCards:s.animCards,
+    drawCount:s.animDrawCount,
+    onDone:()=>set({animating:false,animCards:[],animDrawCount:0})
+  });
   return React.createElement('div',{className:'screen'},
     React.createElement(TurnDots,{turn:s.turn}),
     React.createElement(ScoreBar,{primary:s.primaryTotal,secondary:s.secondaryTotal,turn:s.turn}),
@@ -315,9 +482,10 @@ function GameWrapper({deck,onReset}){
       React.createElement('div',{className:'divider'}),
       React.createElement('p',{style:{marginBottom:'8px'}},'Shuffle your hand back and draw 4 instead?'),
       React.createElement('button',{className:'btn btn-primary',onClick:()=>{
+        const discarded=[...s.hand];
         const np=shuffle([...s.hand,...s.drawPile]);
         const{newHand,newPile}=drawN(np,[],4);
-        set({hand:newHand,drawPile:newPile,phase:'turn1_pick_active'});
+        set({animating:true,animCards:discarded,animDrawCount:4,hand:newHand,drawPile:newPile,phase:'turn1_pick_active'});
       }},'Redeploy \u2014 Draw 4'),
       React.createElement('button',{className:'btn',onClick:()=>set({phase:'turn1_pick_active'})},'Hold Position \u2014 Keep Hand')
     ),
